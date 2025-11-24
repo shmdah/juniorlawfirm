@@ -35,29 +35,28 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             font-family: var(--font-sans);
-            overflow-x: hidden;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
 
-        /* --- VIDEO BACKGROUND (PARALLAX STYLE) --- */
+        /* --- VIDEO BACKGROUND --- */
         .back-video {
-            position: fixed; /* Keeps video still while scrolling */
+            position: fixed;
             right: 0;
             bottom: 0;
             min-width: 100%;
             min-height: 100%;
-            z-index: -2; /* Behind everything */
+            z-index: -2;
             object-fit: cover;
         }
 
-        /* Overlay to make text readable over the video */
         .video-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, rgba(5,5,6,0.85) 10%, rgba(5,5,6,0.4) 60%, rgba(5,5,6,0.1) 100%);
-            z-index: -1; /* Behind content, in front of video */
+            background: linear-gradient(90deg, rgba(5,5,6,0.9) 10%, rgba(5,5,6,0.5) 60%, rgba(5,5,6,0.2) 100%);
+            z-index: -1;
         }
 
         /* --- NAVIGATION --- */
@@ -71,12 +70,11 @@
             align-items: center;
             z-index: 100;
             transition: 0.4s ease;
-            background: transparent; /* Start transparent */
+            background: transparent;
         }
 
-        /* When scrolling, add dark blur */
         nav.scrolled {
-            background: rgba(5, 5, 6, 0.85);
+            background: rgba(5, 5, 6, 0.9);
             padding: 15px 50px;
             backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(197, 160, 89, 0.1);
@@ -92,12 +90,14 @@
             letter-spacing: 1px;
             color: var(--gold);
             text-transform: uppercase;
+            z-index: 101; /* Above mobile menu */
         }
 
         .logo i {
             font-size: 1.5rem;
         }
 
+        /* Desktop Menu */
         .nav-links {
             display: flex;
             gap: 40px;
@@ -158,6 +158,21 @@
             font-weight: bold;
         }
 
+        /* Hamburger Menu (Hidden on Desktop) */
+        .burger {
+            display: none;
+            cursor: pointer;
+            z-index: 101;
+        }
+        
+        .burger div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--gold);
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
         /* --- HERO SECTION --- */
         .hero {
             position: relative;
@@ -172,7 +187,7 @@
             position: relative;
             z-index: 3;
             max-width: 650px;
-            transform-style: preserve-3d;
+            /* transform-style removed here to fix mobile jitters, handled in JS */
         }
 
         .small-heading {
@@ -209,6 +224,7 @@
         .cta-group {
             display: flex;
             gap: 20px;
+            flex-wrap: wrap; /* Allows buttons to stack on very small screens */
         }
 
         .btn {
@@ -221,6 +237,7 @@
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            text-align: center;
         }
 
         .btn-primary {
@@ -233,7 +250,6 @@
         .btn-primary:hover {
             background-color: var(--gold-hover);
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(197, 160, 89, 0.5);
         }
 
         .btn-outline {
@@ -270,7 +286,6 @@
         .dot.active {
             background-color: var(--gold);
             border-color: var(--gold);
-            box-shadow: 0 0 10px var(--gold);
         }
 
         /* --- CONTENT SECTION --- */
@@ -297,12 +312,83 @@
             line-height: 1.8;
         }
 
-        /* --- RESPONSIVE --- */
-        @media (max-width: 768px) {
-            h1 { font-size: 3rem; }
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media screen and (max-width: 1024px) {
+            h1 { font-size: 4rem; }
             .hero { padding: 0 5%; }
-            nav { padding: 20px; }
-            .nav-links { display: none; } 
+            nav { padding: 20px 30px; }
+            .pagination { left: 5%; }
+        }
+
+        @media screen and (max-width: 768px) {
+            /* Navbar changes */
+            body { overflow-x: hidden; }
+            nav.scrolled { padding: 15px 20px; }
+            
+            /* Hide desktop actions */
+            .nav-actions { display: none; }
+
+            /* Show Hamburger */
+            .burger { display: block; }
+
+            /* Mobile Menu Drawer */
+            .nav-links {
+                position: absolute;
+                right: 0px;
+                top: 0px;
+                height: 100vh;
+                background-color: rgba(11, 12, 16, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 70%;
+                transform: translateX(100%); /* Hidden by default */
+                transition: transform 0.4s ease-in-out;
+                z-index: 100;
+                border-left: 1px solid rgba(197, 160, 89, 0.2);
+            }
+
+            /* Class to show menu */
+            .nav-links.nav-active {
+                transform: translateX(0%);
+            }
+
+            .nav-links li {
+                margin: 20px 0;
+                opacity: 0; /* Fade in animation handled by JS */
+            }
+
+            /* Hero Typography Adjustments */
+            h1 { font-size: 3rem; margin-bottom: 20px; }
+            .small-heading { margin-bottom: 10px; }
+            p.description { font-size: 1rem; margin-bottom: 30px; }
+            
+            .hero-content {
+                width: 100%;
+                text-align: center; /* Center align on mobile looks better */
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-group {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .section-about { padding: 60px 5%; }
+            .section-about h2 { font-size: 2.2rem; }
+            
+            /* Burger Animation Classes */
+            .toggle .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
+            .toggle .line2 { opacity: 0; }
+            .toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); }
         }
     </style>
 </head>
@@ -319,12 +405,14 @@
             <i class="fas fa-scale-balanced"></i>
             Junior Law Firm
         </div>
+        
         <ul class="nav-links">
             <li><a href="#">HOME</a></li>
             <li><a href="#">ABOUT US</a></li>
             <li><a href="#">SERVICES</a></li>
             <li><a href="#">CONTACT</a></li>
         </ul>
+
         <div class="nav-actions">
             <div class="search-bar">
                 <i class="fas fa-search" style="color: rgba(255,255,255,0.7); font-size: 0.8rem;"></i>
@@ -334,15 +422,20 @@
                 <span class="active">En</span> | <span>Ua</span>
             </div>
         </div>
+
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
     </nav>
 
     <section class="hero">
-        
         <div class="hero-content" id="parallax-content">
             <span class="small-heading">Need any help?</span>
             <h1>We fight for <br><span>Right</span></h1>
             <p class="description">
-                We are a law firm providing various types of legal advice. Carrying out our job, we follow the policy of individual approach towards each client and use complex methods of solving their problems.
+                We are a law firm providing various types of legal advice. Carrying out our job, we follow the policy of individual approach.
             </p>
             <div class="cta-group">
                 <a href="#" class="btn btn-primary">Get a free consultation</a>
@@ -359,8 +452,6 @@
     <section class="section-about">
         <h2>Our Practice Areas</h2>
         <p>
-            Scroll down to experience the effect. The cinematic video remains fixed in the background while this content slides over it.
-            <br><br>
             At Junior Law Firm, we specialize in corporate law, criminal defense, and family litigation. We bring clarity to complex legal situations.
             <br><br>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
@@ -378,10 +469,36 @@
             }
         });
 
-        // --- 2. Mouse Movement Parallax Effect ---
+        // --- 2. Mobile Menu Toggle ---
+        const navSlide = () => {
+            const burger = document.querySelector('.burger');
+            const nav = document.querySelector('.nav-links');
+            const navLinks = document.querySelectorAll('.nav-links li');
+
+            burger.addEventListener('click', () => {
+                // Toggle Nav
+                nav.classList.toggle('nav-active');
+
+                // Animate Links
+                navLinks.forEach((link, index) => {
+                    if (link.style.animation) {
+                        link.style.animation = '';
+                    } else {
+                        link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
+                    }
+                });
+
+                // Burger Animation
+                burger.classList.toggle('toggle');
+            });
+        }
+        navSlide();
+
+        // --- 3. Mouse Movement Parallax (Desktop Only) ---
         document.addEventListener("mousemove", parallax);
 
         function parallax(e) {
+            // Only apply this effect on larger screens to save mobile performance
             if (window.innerWidth > 768) {
                 const content = document.getElementById('parallax-content');
                 const speed = 2; 
@@ -393,6 +510,13 @@
             }
         }
     </script>
+
+    <style>
+        @keyframes navLinkFade {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
 
 </body>
 </html>
