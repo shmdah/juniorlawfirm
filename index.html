@@ -74,7 +74,6 @@
             transition: transform 0.3s ease;
         }
         
-        /* Animate hamburger when clicked */
         .hamburger.active {
             transform: rotate(90deg);
         }
@@ -98,7 +97,6 @@
             position: relative;
         }
 
-        /* Cool underline hover effect for desktop */
         .nav-links li a::after {
             content: '';
             position: absolute;
@@ -242,7 +240,7 @@
 
         .btn-outline:hover { background-color: rgba(255,255,255,0.1); border-color: white; }
 
-        /* --- ABOUT & CONTACT STYLES (Same as before) --- */
+        /* --- ABOUT & CONTACT STYLES --- */
         #about, #contact {
             background: var(--bg-darker);
             padding: 120px 10% 50px;
@@ -278,36 +276,32 @@
             .hamburger { display: block; order: 1; }
             .logo { order: 2; }
             
-            /* --- FLOATING GLASS CARD MENU --- */
+            /* FLOATING GLASS CARD MENU */
             .nav-links {
                 position: absolute;
-                top: 85px; /* Sits below the navbar */
-                left: 50%; /* Center horizontally */
-                transform: translateX(-50%) translateY(-20px); /* Start slightly higher for animation */
+                top: 85px; 
+                left: 50%; 
+                transform: translateX(-50%) translateY(-20px); 
                 
-                /* Size Constraints */
                 width: 90%; 
                 max-width: 350px;
                 
-                /* COOL GLASS EFFECT */
                 background: rgba(11, 12, 16, 0.9); 
                 backdrop-filter: blur(20px); 
                 -webkit-backdrop-filter: blur(20px);
                 
-                /* Border & Shape */
-                border: 1px solid rgba(197, 160, 89, 0.4); /* Subtle Gold Border */
+                border: 1px solid rgba(197, 160, 89, 0.4); 
                 border-radius: 20px;
-                box-shadow: 0 15px 35px rgba(0,0,0,0.7); /* Deep shadow to make it float */
+                box-shadow: 0 15px 35px rgba(0,0,0,0.7); 
                 
                 flex-direction: column;
                 align-items: center;
                 padding: 30px 0;
                 gap: 25px;
                 
-                /* Animation States */
                 opacity: 0;
                 visibility: hidden;
-                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy animation */
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             }
 
             .nav-links li a {
@@ -315,11 +309,10 @@
                 letter-spacing: 2px;
             }
 
-            /* Active State (When menu is open) */
             .nav-links.active { 
                 opacity: 1;
                 visibility: visible;
-                transform: translateX(-50%) translateY(0); /* Drop into place */
+                transform: translateX(-50%) translateY(0); 
             }
 
             h1 { font-size: 3rem; }
@@ -404,8 +397,7 @@
                         <i class="fas fa-phone-alt"></i>
                         <div>
                             <h4>Phone</h4>
-                            <p>+1 (555) 123-4567</p>
-                            <p>+1 (555) 987-6543</p>
+                            <p>0737806706</p>
                         </div>
                     </div>
 
@@ -422,7 +414,7 @@
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h4>Location</h4>
-                            <p>101 Legal Avenue, Suite 400<br>New York, NY 10012</p>
+                            <p>Ngara, Nairobi</p>
                         </div>
                     </div>
                 </div>
