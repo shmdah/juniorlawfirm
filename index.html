@@ -35,7 +35,7 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             font-family: var(--font-sans);
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-x: hidden;
         }
 
         /* --- VIDEO BACKGROUND --- */
@@ -66,8 +66,9 @@
             width: 100%;
             padding: 30px 50px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            /* CHANGED: This aligns everything to the left start */
+            justify-content: flex-start; 
             z-index: 100;
             transition: 0.4s ease;
             background: transparent;
@@ -90,14 +91,15 @@
             letter-spacing: 1px;
             color: var(--gold);
             text-transform: uppercase;
-            z-index: 101; /* Above mobile menu */
+            z-index: 101;
+            /* Added margin to separate logo from menu */
+            margin-right: 60px; 
         }
 
         .logo i {
             font-size: 1.5rem;
         }
 
-        /* Desktop Menu */
         .nav-links {
             display: flex;
             gap: 40px;
@@ -121,10 +123,12 @@
             opacity: 1;
         }
 
+        /* CHANGED: This pushes the search bar to the far right */
         .nav-actions {
             display: flex;
             align-items: center;
             gap: 20px;
+            margin-left: auto; 
         }
 
         .search-bar {
@@ -158,11 +162,13 @@
             font-weight: bold;
         }
 
-        /* Hamburger Menu (Hidden on Desktop) */
+        /* Hamburger Menu */
         .burger {
             display: none;
             cursor: pointer;
             z-index: 101;
+            /* Pushes burger to far right on mobile */
+            margin-left: auto; 
         }
         
         .burger div {
@@ -187,7 +193,6 @@
             position: relative;
             z-index: 3;
             max-width: 650px;
-            /* transform-style removed here to fix mobile jitters, handled in JS */
         }
 
         .small-heading {
@@ -224,7 +229,7 @@
         .cta-group {
             display: flex;
             gap: 20px;
-            flex-wrap: wrap; /* Allows buttons to stack on very small screens */
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -264,7 +269,6 @@
             background-color: rgba(255,255,255,0.15);
         }
 
-        /* Pagination Dots */
         .pagination {
             position: absolute;
             bottom: 50px;
@@ -321,15 +325,20 @@
         }
 
         @media screen and (max-width: 768px) {
-            /* Navbar changes */
-            body { overflow-x: hidden; }
-            nav.scrolled { padding: 15px 20px; }
+            /* Mobile Navbar: Ensure spacing */
+            nav {
+                justify-content: space-between; /* Reset to standard spread for mobile */
+            }
+            .logo { margin-right: 0; }
             
             /* Hide desktop actions */
             .nav-actions { display: none; }
 
             /* Show Hamburger */
-            .burger { display: block; }
+            .burger { 
+                display: block; 
+                margin-left: 0; /* Reset auto margin for flex layout */
+            }
 
             /* Mobile Menu Drawer */
             .nav-links {
@@ -343,30 +352,29 @@
                 align-items: center;
                 justify-content: center;
                 width: 70%;
-                transform: translateX(100%); /* Hidden by default */
+                transform: translateX(100%); 
                 transition: transform 0.4s ease-in-out;
                 z-index: 100;
                 border-left: 1px solid rgba(197, 160, 89, 0.2);
             }
 
-            /* Class to show menu */
             .nav-links.nav-active {
                 transform: translateX(0%);
             }
 
             .nav-links li {
                 margin: 20px 0;
-                opacity: 0; /* Fade in animation handled by JS */
+                opacity: 0; 
             }
 
-            /* Hero Typography Adjustments */
+            /* Hero Typography */
             h1 { font-size: 3rem; margin-bottom: 20px; }
             .small-heading { margin-bottom: 10px; }
             p.description { font-size: 1rem; margin-bottom: 30px; }
             
             .hero-content {
                 width: 100%;
-                text-align: center; /* Center align on mobile looks better */
+                text-align: center; 
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -385,7 +393,7 @@
             .section-about { padding: 60px 5%; }
             .section-about h2 { font-size: 2.2rem; }
             
-            /* Burger Animation Classes */
+            /* Burger Animation */
             .toggle .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
             .toggle .line2 { opacity: 0; }
             .toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); }
@@ -476,10 +484,8 @@
             const navLinks = document.querySelectorAll('.nav-links li');
 
             burger.addEventListener('click', () => {
-                // Toggle Nav
                 nav.classList.toggle('nav-active');
 
-                // Animate Links
                 navLinks.forEach((link, index) => {
                     if (link.style.animation) {
                         link.style.animation = '';
@@ -487,8 +493,6 @@
                         link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
                     }
                 });
-
-                // Burger Animation
                 burger.classList.toggle('toggle');
             });
         }
@@ -498,7 +502,6 @@
         document.addEventListener("mousemove", parallax);
 
         function parallax(e) {
-            // Only apply this effect on larger screens to save mobile performance
             if (window.innerWidth > 768) {
                 const content = document.getElementById('parallax-content');
                 const speed = 2; 
