@@ -8,16 +8,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
         /* --- CSS VARIABLES --- */
         :root {
-            --bg-dark: #0b0c10; 
+            --bg-dark: #0b0c10;
+            --bg-darker: #050506;
             --gold: #c5a059;
             --gold-hover: #d4af37;
             --text-main: #ffffff;
-            --text-muted: #e0e0e0;
+            --text-muted: #cccccc;
             --font-serif: 'Playfair Display', serif;
             --font-sans: 'Inter', sans-serif;
         }
@@ -33,137 +35,64 @@
             width: 100vw;
         }
 
-        /* --- VIDEO BACKGROUND (Optimized for Mobile) --- */
-        .back-video {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover; /* Ensures video fills screen on mobile portrait */
-            object-position: center;
-            z-index: -2;
-        }
-
-        .video-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(5,5,6,0.9) 10%, rgba(5,5,6,0.7) 60%, rgba(5,5,6,0.4) 100%);
-            z-index: -1;
-        }
-
         /* --- NAVIGATION --- */
         nav {
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 30px 50px;
+            padding: 25px 8%;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            /* Flex layout handles the spacing */
-            justify-content: space-between; 
             z-index: 1000;
-            transition: 0.4s ease;
-        }
-
-        /* Hamburger (Default hidden on Desktop) */
-        .burger {
-            display: none;
-            cursor: pointer;
-            z-index: 1001;
-        }
-        
-        .burger div {
-            width: 25px;
-            height: 3px;
-            background-color: var(--gold);
-            margin: 5px;
-            transition: all 0.3s ease;
+            background: transparent; 
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-family: var(--font-serif);
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             letter-spacing: 1px;
             color: var(--gold);
             text-transform: uppercase;
-            cursor: pointer;
-            /* Logo stays left on desktop, center/right on mobile */
         }
 
-        .logo i { font-size: 1.5rem; }
+        .logo i { font-size: 1.8rem; }
 
-        /* Desktop Menu Links */
+        /* Desktop Menu */
         .nav-links {
             display: flex;
             gap: 40px;
             list-style: none;
-            /* Pushes links to the left side in the remaining space */
-            margin-right: auto; 
-            margin-left: 60px;
         }
 
         .nav-links li a {
-            color: var(--text-main);
+            color: white;
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: 500;
             letter-spacing: 1px;
             text-transform: uppercase;
-            opacity: 0.9;
             transition: 0.3s;
             cursor: pointer;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         .nav-links li a:hover, .nav-links li a.active {
             color: var(--gold);
-            opacity: 1;
         }
 
-        /* Search & Lang (Right Side) */
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .search-bar {
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 20px;
-            padding: 5px 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(0,0,0,0.2);
-            backdrop-filter: blur(5px);
-        }
-
-        .search-bar input {
-            background: transparent;
-            border: none;
-            color: white;
-            outline: none;
-            width: 60px;
-            font-size: 0.8rem;
-        }
-
-        .lang {
-            font-size: 0.8rem;
-            color: var(--text-muted);
+        /* Mobile Hamburger */
+        .hamburger {
+            display: none;
+            color: var(--gold);
+            font-size: 1.8rem;
             cursor: pointer;
         }
 
-        .lang span.active { color: white; font-weight: bold; }
-
-        /* --- SPA PAGE LOGIC --- */
+        /* --- PAGE STRUCTURE (SPA) --- */
         .page-section {
             position: absolute;
             top: 0;
@@ -173,119 +102,124 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.5s ease, visibility 0.5s;
-            overflow-y: auto;
-            padding-top: 100px; 
+            overflow-y: auto; 
+            padding-top: 80px; 
+            background-color: var(--bg-dark);
+            z-index: 1;
         }
 
         .page-section.active {
             opacity: 1;
             visibility: visible;
-            z-index: 1;
+            z-index: 2;
         }
 
-        /* --- HOME PAGE (No Scroll) --- */
+        /* --- HOME PAGE (NO SCROLL) --- */
         #home {
             padding-top: 0;
-            overflow: hidden;
+            overflow: hidden; /* STRICTLY NO SCROLL */
             display: flex;
             align-items: center;
-            padding-left: 10%;
+            justify-content: center;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1575505586569-646b2ca898fc?q=80&w=2670&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            transform: scale(1.1); 
         }
 
         .hero-content {
-            position: relative;
-            z-index: 3;
-            max-width: 650px;
+            text-align: center;
+            max-width: 700px;
+            padding: 20px;
+            margin-top: 60px; 
         }
 
-        .small-heading {
-            color: var(--text-muted);
+        .hero-subtitle {
             font-size: 0.9rem;
-            margin-bottom: 15px;
-            display: block;
-            text-transform: uppercase;
             letter-spacing: 2px;
+            text-transform: uppercase;
+            color: white;
+            margin-bottom: 15px;
+            opacity: 0.9;
         }
 
         h1 {
             font-family: var(--font-serif);
-            font-size: 5rem;
+            font-size: 4rem;
             line-height: 1.1;
-            margin-bottom: 25px;
             color: var(--gold);
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
         }
 
         h1 span { color: white; }
 
-        p.description {
-            color: var(--text-muted);
-            line-height: 1.7;
-            margin-bottom: 40px;
+        .hero-desc {
+            color: #ddd;
             font-size: 1.1rem;
-            max-width: 500px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .cta-group {
+        .btn-stack {
             display: flex;
-            gap: 20px;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            width: 100%;
         }
 
         .btn {
-            padding: 15px 40px;
-            border-radius: 30px;
+            padding: 16px 40px;
+            border-radius: 50px;
             text-decoration: none;
             font-size: 0.9rem;
-            font-weight: 500;
-            transition: 0.3s ease;
-            cursor: pointer;
+            font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            max-width: 320px;
             text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .btn-primary {
             background-color: var(--gold);
-            color: var(--bg-dark);
+            color: #1a1a1a;
             border: 1px solid var(--gold);
         }
-        .btn-primary:hover { background-color: var(--gold-hover); transform: translateY(-3px); }
+        
+        .btn-primary:hover { background-color: #e0b456; }
 
         .btn-outline {
-            background-color: rgba(255,255,255,0.05);
+            background-color: transparent;
             color: white;
             border: 1px solid rgba(255,255,255,0.4);
-            backdrop-filter: blur(5px);
-        }
-        .btn-outline:hover { border-color: white; background-color: rgba(255,255,255,0.15); }
-
-        /* Pagination Dots */
-        .pagination {
-            position: absolute;
-            bottom: 50px;
-            left: 10%;
-            display: flex;
-            gap: 15px;
-            z-index: 3;
         }
 
-        .dot {
-            width: 12px; height: 12px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.5);
-            cursor: pointer;
-        }
-        .dot.active { background-color: var(--gold); border-color: var(--gold); }
+        .btn-outline:hover { background-color: rgba(255,255,255,0.1); border-color: white; }
 
-        /* --- ABOUT & CONTACT --- */
-        #about, #contact {
-            background-color: rgba(11, 12, 16, 0.95); 
+        /* --- ABOUT PAGE --- */
+        #about {
+            background: var(--bg-darker);
+            padding: 120px 10% 50px;
         }
 
         .content-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 5%;
         }
 
         .section-title {
@@ -311,10 +245,44 @@
             font-size: 1.05rem;
         }
 
+        .about-images {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .about-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 4px;
+            filter: grayscale(30%);
+            transition: 0.3s;
+        }
+
+        .about-img:hover { filter: grayscale(0%); }
+
+        /* --- CONTACT PAGE --- */
+        #contact {
+            background: var(--bg-dark);
+            padding: 120px 10% 50px;
+            display: flex;
+            align-items: center;
+        }
+
         .contact-wrapper {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 60px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-info-box {
+            background: rgba(255,255,255,0.03);
+            padding: 40px;
+            border: 1px solid rgba(197, 160, 89, 0.2);
         }
 
         .info-item {
@@ -324,136 +292,119 @@
             gap: 20px;
         }
 
-        .info-item i { color: var(--gold); font-size: 1.5rem; }
-        .info-item h4 { color: white; font-size: 1.2rem; margin-bottom: 5px; }
+        .info-item i {
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-top: 5px;
+        }
 
-        /* --- RESPONSIVE MOBILE --- */
+        .info-item h4 {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            font-family: var(--font-serif);
+        }
+
+        .info-item p {
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* --- RESPONSIVE MOBILE FIXES --- */
         @media (max-width: 768px) {
+            nav { padding: 20px; background: rgba(0,0,0,0.8); }
             
-            /* Navbar Layout for Mobile */
-            nav { 
-                justify-content: space-between; 
-                padding: 20px 30px; 
-            }
-
-            /* 1. Show Burger on Left */
-            .burger { 
-                display: block; 
-                order: 1; /* First item */
-            }
-
-            /* 2. Center/Right Logo */
-            .logo { 
-                order: 2; /* Second item */
-                margin-left: auto; /* Pushes logo to right (or remove auto to center if preferred) */
-            }
-
-            /* 3. Hide Actions */
-            .nav-actions { display: none; }
-
-            /* Mobile Menu Drawer (Left Side Slide-in) */
+            .hamburger { display: block; }
+            
             .nav-links {
                 position: absolute;
-                left: 0; /* Align Left */
-                top: 0;
-                height: 100vh;
-                background-color: rgba(11, 12, 16, 0.98);
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--bg-darker);
                 flex-direction: column;
                 align-items: center;
-                justify-content: center;
-                width: 75%; /* Width of drawer */
-                margin-left: 0;
-                
-                /* Start hidden to the left */
-                transform: translateX(-100%); 
-                transition: transform 0.4s ease-in-out;
-                border-right: 1px solid rgba(197, 160, 89, 0.2);
-                z-index: 999;
+                padding: 30px 0;
+                gap: 25px;
+                border-bottom: 1px solid var(--gold);
+                display: none; 
             }
 
-            .nav-links.nav-active { 
-                transform: translateX(0%); 
-            }
+            .nav-links.active { display: flex; }
 
             h1 { font-size: 3rem; }
-            .hero { padding: 0 5%; justify-content: center; }
-            .hero-content { text-align: center; align-items: center; display: flex; flex-direction: column; }
-            .cta-group { justify-content: center; }
             
-            .about-grid, .contact-wrapper { grid-template-columns: 1fr; }
+            /* Button Fixes for Mobile */
+            .btn-stack {
+                width: 100%;
+                padding: 0 10px; /* Padding to prevent touching edges */
+            }
+            
+            .btn {
+                width: 100%; /* Force full width on mobile */
+                max-width: none; /* Remove desktop width restriction */
+                padding: 18px 20px; /* Better touch target */
+                font-size: 0.85rem; /* Ensure text fits */
+            }
+
+            /* Stack layouts for inner pages */
+            .about-grid, .contact-wrapper {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .about-images { grid-template-columns: 1fr; }
+            #contact { align-items: flex-start; }
         }
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop playsinline class="back-video">
-        <source src="images/law-firm-bg.mp4" type="video/mp4">
-    </video>
-
-    <div class="video-overlay"></div>
-
-    <nav id="navbar">
-        
-        <div class="burger">
-            <div class="line1"></div>
-            <div class="line2"></div>
-            <div class="line3"></div>
-        </div>
-
+    <nav>
         <div class="logo" onclick="showPage('home')">
             <i class="fas fa-scale-balanced"></i>
             Junior Law Firm
         </div>
-        
-        <ul class="nav-links">
+        <div class="hamburger" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+        <ul class="nav-links" id="navLinks">
             <li><a onclick="showPage('home')">HOME</a></li>
             <li><a onclick="showPage('about')">ABOUT US</a></li>
             <li><a href="#">SERVICES</a></li>
             <li><a onclick="showPage('contact')">CONTACT</a></li>
         </ul>
-
-        <div class="nav-actions">
-            <div class="search-bar">
-                <i class="fas fa-search" style="color: rgba(255,255,255,0.7); font-size: 0.8rem;"></i>
-                <input type="text" placeholder="Search">
-            </div>
-            <div class="lang">
-                <span class="active">En</span> | <span>Ua</span>
-            </div>
-        </div>
     </nav>
 
     <section id="home" class="page-section active">
-        <div class="hero-content" id="parallax-content">
-            <span class="small-heading">Need any help?</span>
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <p class="hero-subtitle">Need Any Help?</p>
             <h1>We fight for <br><span>Right</span></h1>
-            <p class="description">
+            <p class="hero-desc">
                 We are a law firm providing various types of legal advice. Carrying out our job, we follow the policy of individual approach towards each client.
             </p>
-            <div class="cta-group">
-                <a onclick="showPage('contact')" class="btn btn-primary">Get a free consultation</a>
-                <a onclick="showPage('about')" class="btn btn-outline">About us</a>
+            <div class="btn-stack">
+                <a onclick="showPage('contact')" class="btn btn-primary">Get a Free Consultation</a>
+                <a onclick="showPage('about')" class="btn btn-outline">About Us</a>
             </div>
-        </div>
-
-        <div class="pagination">
-            <div class="dot active"></div>
-            <div class="dot"></div>
         </div>
     </section>
 
     <section id="about" class="page-section">
         <div class="content-container">
-            <h2 class="section-title">About Our Firm</h2>
+            <h2 class="section-title">Who We Are</h2>
             <div class="about-grid">
                 <div class="about-text">
-                    <p>At <strong>Junior Law Firm</strong>, we represent the new generation of legal excellence. We bridge the gap between traditional legal wisdom and modern problem-solving strategies.</p>
-                    <p>Our firm specializes in navigating complex legal landscapes for individuals and corporations alike. Whether you are facing criminal charges or structuring a corporate merger, our team creates tailored strategies.</p>
+                    <p>At <strong>Junior Law Firm</strong>, we represent the new generation of legal excellence. Founded on the principles of integrity, transparency, and relentless advocacy, we bridge the gap between traditional legal wisdom and modern problem-solving strategies.</p>
+                    <p>Our firm specializes in navigating complex legal landscapes for individuals and corporations alike. Whether you are facing criminal charges, navigating a difficult divorce, or structuring a corporate merger, our team creates tailored strategies that prioritize your specific goals.</p>
+                    <p>We don't just interpret the law; we champion your cause with an individual approach that ensures no detail is overlooked.</p>
+                    <br>
+                    <a onclick="showPage('contact')" class="btn btn-primary" style="display:inline-block; width:auto;">Meet Our Attorneys</a>
                 </div>
-                <div class="about-text">
-                     <p>We pride ourselves on our 98% success rate in settlements and our dedication to client confidentiality.</p>
-                     <br>
-                     <a onclick="showPage('contact')" class="btn btn-primary">Meet The Team</a>
+                <div class="about-images">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2669&auto=format&fit=crop" alt="Law Office" class="about-img">
+                    <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2632&auto=format&fit=crop" alt="Legal Meeting" class="about-img">
                 </div>
             </div>
         </div>
@@ -462,6 +413,8 @@
     <section id="contact" class="page-section">
         <div class="content-container">
             <h2 class="section-title">Get In Touch</h2>
+            <p style="color:#aaa; margin-bottom:40px;">Reach out to us for a confidential case evaluation.</p>
+            
             <div class="contact-wrapper">
                 <div class="contact-details">
                     <div class="info-item">
@@ -469,15 +422,19 @@
                         <div>
                             <h4>Phone</h4>
                             <p>+1 (555) 123-4567</p>
+                            <p>+1 (555) 987-6543</p>
                         </div>
                     </div>
+
                     <div class="info-item">
                         <i class="fas fa-envelope"></i>
                         <div>
                             <h4>Email</h4>
                             <p>contact@juniorlawfirm.com</p>
+                            <p>consult@juniorlawfirm.com</p>
                         </div>
                     </div>
+
                     <div class="info-item">
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
@@ -486,57 +443,47 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="contact-info-box">
+                    <h3 style="color:var(--gold); font-family:var(--font-serif); margin-bottom:20px;">Office Hours</h3>
+                    <p style="color:#ccc; line-height:2;">
+                        Monday - Friday: 9:00 AM - 6:00 PM<br>
+                        Saturday: 10:00 AM - 2:00 PM<br>
+                        Sunday: Closed
+                    </p>
+                    <br>
+                    <p style="font-size:0.9rem; color:#888;">*Emergency legal counsel available 24/7 for existing clients.</p>
+                </div>
             </div>
         </div>
     </section>
 
     <script>
-        // --- 1. Page Switching Logic (SPA) ---
+        // FUNCTION TO SWITCH PAGES
         function showPage(pageId) {
-            document.querySelectorAll('.page-section').forEach(page => {
+            // 1. Hide all pages
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => {
                 page.classList.remove('active');
             });
-            const target = document.getElementById(pageId);
-            if(target) target.classList.add('active');
 
-            // Close mobile menu if open
-            const nav = document.querySelector('.nav-links');
-            const burger = document.querySelector('.burger');
-            if(nav.classList.contains('nav-active')){
-                nav.classList.remove('nav-active');
-                burger.classList.toggle('toggle');
+            // 2. Show the selected page
+            const activePage = document.getElementById(pageId);
+            if(activePage) {
+                activePage.classList.add('active');
             }
+
+            // 3. Close mobile menu if open
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.remove('active');
         }
 
-        // --- 2. Mobile Menu Toggle ---
-        const burger = document.querySelector('.burger');
-        const nav = document.querySelector('.nav-links');
-        
-        burger.addEventListener('click', () => {
-            nav.classList.toggle('nav-active');
-            // Animate X icon
-            burger.classList.toggle('toggle');
-        });
-
-        // --- 3. Mouse Parallax (Desktop) ---
-        document.addEventListener("mousemove", (e) => {
-            if (window.innerWidth > 768) {
-                const content = document.getElementById('parallax-content');
-                if(content) {
-                    const speed = 2;
-                    const x = (window.innerWidth - e.pageX * speed) / 100;
-                    const y = (window.innerHeight - e.pageY * speed) / 100;
-                    content.style.transform = `translateX(${x}px) translateY(${y}px)`;
-                }
-            }
-        });
+        // TOGGLE MOBILE MENU
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
     </script>
-    
-    <style>
-        .toggle .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
-        .toggle .line2 { opacity: 0; }
-        .toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); }
-    </style>
 
 </body>
 </html>
