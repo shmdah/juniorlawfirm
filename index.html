@@ -19,49 +19,20 @@
             --gold: #c5a059;
             --gold-hover: #d4af37;
             --text-main: #ffffff;
-            --text-muted: #e0e0e0;
+            --text-muted: #cccccc;
             --font-serif: 'Playfair Display', serif;
             --font-sans: 'Inter', sans-serif;
         }
 
-        /* --- GLOBAL RESET --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
             font-family: var(--font-sans);
-            overflow-x: hidden;
-        }
-
-        /* --- VIDEO BACKGROUND --- */
-        .back-video {
-            position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto; 
-            height: auto;
-            z-index: -2;
-            
-            /* DESKTOP DEFAULT: Covers the whole screen */
-            object-fit: cover; 
-            object-position: center center;
-        }
-
-        .video-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(5,5,6,0.9) 10%, rgba(5,5,6,0.5) 60%, rgba(5,5,6,0.2) 100%);
-            z-index: -1;
+            overflow: hidden; /* Prevents body scroll, we handle it per page */
+            height: 100vh;
+            width: 100vw;
         }
 
         /* --- NAVIGATION --- */
@@ -69,474 +40,434 @@
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 30px 50px;
+            padding: 25px 8%;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: flex-start; /* Desktop: Start from left */
-            z-index: 100;
-            transition: 0.4s ease;
-            background: transparent;
-        }
-
-        nav.scrolled {
-            background: rgba(5, 5, 6, 0.95);
-            padding: 15px 50px;
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(197, 160, 89, 0.1);
-        }
-
-        /* Hamburger Menu (Defined early so we can move it in HTML) */
-        .burger {
-            display: none; /* Hidden on Desktop */
-            cursor: pointer;
-            z-index: 101;
-        }
-        
-        .burger div {
-            width: 25px;
-            height: 3px;
-            background-color: var(--gold);
-            margin: 5px;
-            transition: all 0.3s ease;
+            z-index: 1000;
+            background: transparent; 
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-family: var(--font-serif);
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             letter-spacing: 1px;
             color: var(--gold);
             text-transform: uppercase;
-            z-index: 101;
-            margin-right: 60px; /* Space between logo and menu on desktop */
         }
 
-        .logo i {
-            font-size: 1.5rem;
-        }
+        .logo i { font-size: 1.8rem; }
 
+        /* Desktop Menu */
         .nav-links {
             display: flex;
             gap: 40px;
             list-style: none;
         }
 
-        .nav-links a {
-            color: var(--text-main);
+        .nav-links li a {
+            color: white;
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: 500;
             letter-spacing: 1px;
             text-transform: uppercase;
-            opacity: 0.9;
             transition: 0.3s;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5); 
-        }
-
-        .nav-links a:hover {
-            color: var(--gold);
-            opacity: 1;
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-left: auto; /* Pushes to far right */
-        }
-
-        .search-bar {
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 20px;
-            padding: 5px 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(0,0,0,0.2);
-            backdrop-filter: blur(5px);
-        }
-
-        .search-bar input {
-            background: transparent;
-            border: none;
-            color: white;
-            outline: none;
-            width: 60px;
-            font-size: 0.8rem;
-        }
-
-        .lang {
-            font-size: 0.8rem;
-            color: var(--text-muted);
             cursor: pointer;
         }
 
-        .lang span.active {
-            color: white;
-            font-weight: bold;
+        .nav-links li a:hover, .nav-links li a.active {
+            color: var(--gold);
         }
 
-        /* --- HERO SECTION --- */
-        .hero {
-            position: relative;
-            height: 100vh;
+        /* Mobile Hamburger */
+        .hamburger {
+            display: none;
+            color: var(--gold);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        /* --- PAGE STRUCTURE (SPA) --- */
+        .page-section {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100vh;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s;
+            overflow-y: auto; /* Allows scrolling within pages like About/Contact */
+            padding-top: 80px; /* Space for navbar */
+            background-color: var(--bg-dark);
+            z-index: 1;
+        }
+
+        .page-section.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 2;
+        }
+
+        /* --- HOME PAGE (NO SCROLL) --- */
+        #home {
+            padding-top: 0;
+            overflow: hidden; /* STRICTLY NO SCROLL */
             display: flex;
             align-items: center;
-            padding: 0 10%;
+            justify-content: center;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* Statue background similar to your screenshot */
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1575505586569-646b2ca898fc?q=80&w=2670&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            transform: scale(1.1); /* Slight zoom for parallax feel */
         }
 
         .hero-content {
-            position: relative;
-            z-index: 3;
-            max-width: 650px;
+            text-align: center;
+            max-width: 700px;
+            padding: 20px;
+            margin-top: 60px; /* Offset for visual balance */
         }
 
-        .small-heading {
-            color: var(--text-muted);
+        .hero-subtitle {
             font-size: 0.9rem;
-            margin-bottom: 15px;
-            display: block;
-            text-transform: uppercase;
             letter-spacing: 2px;
+            text-transform: uppercase;
+            color: white;
+            margin-bottom: 15px;
+            opacity: 0.9;
         }
 
         h1 {
             font-family: var(--font-serif);
-            font-size: 5rem;
+            font-size: 4rem;
             line-height: 1.1;
-            margin-bottom: 25px;
             color: var(--gold);
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
         }
 
-        h1 span {
-            color: white;
-        }
+        h1 span { color: white; }
 
-        p.description {
-            color: var(--text-muted);
-            line-height: 1.7;
-            margin-bottom: 40px;
+        .hero-desc {
+            color: #ddd;
             font-size: 1.1rem;
-            max-width: 500px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .cta-group {
+        .btn-stack {
             display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            width: 100%;
         }
 
         .btn {
-            padding: 15px 40px;
-            border-radius: 30px;
+            padding: 16px 40px;
+            border-radius: 50px;
             text-decoration: none;
             font-size: 0.9rem;
-            font-weight: 500;
-            transition: 0.3s ease;
-            cursor: pointer;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            width: 100%;
+            max-width: 320px;
             text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
         }
 
         .btn-primary {
             background-color: var(--gold);
-            color: var(--bg-dark);
+            color: #1a1a1a;
             border: 1px solid var(--gold);
-            box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3);
         }
-
-        .btn-primary:hover {
-            background-color: var(--gold-hover);
-            transform: translateY(-3px);
-        }
+        
+        .btn-primary:hover { background-color: #e0b456; }
 
         .btn-outline {
-            background-color: rgba(255,255,255,0.05);
+            background-color: transparent;
             color: white;
             border: 1px solid rgba(255,255,255,0.4);
-            backdrop-filter: blur(5px);
         }
 
-        .btn-outline:hover {
-            border-color: white;
-            background-color: rgba(255,255,255,0.15);
+        .btn-outline:hover { background-color: rgba(255,255,255,0.1); border-color: white; }
+
+        /* --- ABOUT PAGE --- */
+        #about {
+            background: var(--bg-darker);
+            padding: 120px 10% 50px;
         }
 
-        .pagination {
-            position: absolute;
-            bottom: 50px;
-            left: 10%;
-            display: flex;
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.3);
+            padding-bottom: 15px;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .about-images {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
-            z-index: 3;
         }
 
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.5);
-            cursor: pointer;
+        .about-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 4px;
+            filter: grayscale(30%);
             transition: 0.3s;
         }
 
-        .dot.active {
-            background-color: var(--gold);
-            border-color: var(--gold);
+        .about-img:hover { filter: grayscale(0%); }
+
+        /* --- CONTACT PAGE --- */
+        #contact {
+            background: var(--bg-dark);
+            padding: 120px 10% 50px;
+            display: flex;
+            align-items: center;
         }
 
-        /* --- CONTENT SECTION --- */
-        .section-about {
-            background-color: var(--bg-darker); 
-            padding: 100px 10%;
-            min-height: 80vh;
-            position: relative;
-            z-index: 2;
-            border-top: 1px solid rgba(255,255,255,0.05);
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .section-about h2 {
-            font-family: var(--font-serif);
-            color: var(--gold);
-            font-size: 3rem;
+        .contact-info-box {
+            background: rgba(255,255,255,0.03);
+            padding: 40px;
+            border: 1px solid rgba(197, 160, 89, 0.2);
+        }
+
+        .info-item {
             margin-bottom: 30px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
         }
-        
-        .section-about p {
+
+        .info-item i {
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-top: 5px;
+        }
+
+        .info-item h4 {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            font-family: var(--font-serif);
+        }
+
+        .info-item p {
             color: var(--text-muted);
-            max-width: 700px;
-            font-size: 1.1rem;
-            line-height: 1.8;
+            line-height: 1.5;
         }
 
-        /* --- MOBILE RESPONSIVENESS --- */
-        @media screen and (max-width: 1024px) {
-            h1 { font-size: 4rem; }
-            .hero { padding: 0 5%; }
-            nav { padding: 20px 30px; }
-            .pagination { left: 5%; }
-        }
-
-        @media screen and (max-width: 768px) {
-            /* 1. Mobile Layout - Puts Burger Left, Logo Right */
-            nav {
-                justify-content: space-between; 
-            }
-
-            .logo { 
-                margin-right: 0; 
-            }
+        /* --- RESPONSIVE MOBILE --- */
+        @media (max-width: 768px) {
+            nav { padding: 20px; background: rgba(0,0,0,0.8); }
             
-            .nav-actions { display: none; }
+            .hamburger { display: block; }
             
-            /* Show Hamburger */
-            .burger { 
-                display: block; 
-                margin-left: 0; 
-                /* Since Burger is FIRST in HTML, it sits on the Left */
-            }
-
-            /* 2. MENU DRAWER - LEFT SIDE */
             .nav-links {
                 position: absolute;
-                left: 0px; 
-                top: 0px;
-                height: 100vh;
-                background-color: rgba(11, 12, 16, 0.98);
-                backdrop-filter: blur(10px);
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--bg-darker);
                 flex-direction: column;
                 align-items: center;
-                justify-content: center;
-                width: 75%;
-                transform: translateX(-100%); /* Hidden to the Left */
-                transition: transform 0.4s ease-in-out;
-                z-index: 100;
-                border-right: 1px solid rgba(197, 160, 89, 0.2); 
+                padding: 30px 0;
+                gap: 25px;
+                border-bottom: 1px solid var(--gold);
+                display: none; /* Hidden by default on mobile */
             }
 
-            .nav-links.nav-active {
-                transform: translateX(0%);
-            }
+            .nav-links.active { display: flex; }
 
-            .nav-links li {
-                margin: 20px 0;
-                opacity: 0; 
-            }
-
-            /* 3. VIDEO FIX FOR MOBILE */
-            .back-video {
-                /* Ensures video takes up 100% of height and width */
-                width: 100%;
-                height: 100vh;
-                object-fit: cover;
-                /* Adjust this if the main subject is slightly off-center */
-                object-position: 50% 50%; 
+            h1 { font-size: 3rem; }
+            
+            .about-grid, .contact-wrapper {
+                grid-template-columns: 1fr;
+                gap: 30px;
             }
             
-            /* Typography Adjustments */
-            h1 { font-size: 3rem; margin-bottom: 20px; }
-            .small-heading { margin-bottom: 10px; }
-            p.description { font-size: 1rem; margin-bottom: 30px; }
-            
-            .hero-content {
-                width: 100%;
-                text-align: center; 
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .cta-group {
-                justify-content: center;
-                width: 100%;
-            }
-
-            .btn {
-                width: 100%;
-                max-width: 250px;
-            }
-
-            .section-about { padding: 60px 5%; }
-            .section-about h2 { font-size: 2.2rem; }
-            
-            /* Burger Animation */
-            .toggle .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
-            .toggle .line2 { opacity: 0; }
-            .toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); }
+            .about-images { grid-template-columns: 1fr; }
+            #contact { align-items: flex-start; }
         }
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop playsinline class="back-video">
-        <source src="images/law-firm-bg.mp4" type="video/mp4">
-    </video>
-
-    <div class="video-overlay"></div>
-
-    <nav id="navbar">
-        <div class="burger">
-            <div class="line1"></div>
-            <div class="line2"></div>
-            <div class="line3"></div>
-        </div>
-
-        <div class="logo">
+    <nav>
+        <div class="logo" onclick="showPage('home')">
             <i class="fas fa-scale-balanced"></i>
             Junior Law Firm
         </div>
-        
-        <ul class="nav-links">
-            <li><a href="#">HOME</a></li>
-            <li><a href="#">ABOUT US</a></li>
-            <li><a href="#">SERVICES</a></li>
-            <li><a href="#">CONTACT</a></li>
-        </ul>
-
-        <div class="nav-actions">
-            <div class="search-bar">
-                <i class="fas fa-search" style="color: rgba(255,255,255,0.7); font-size: 0.8rem;"></i>
-                <input type="text" placeholder="Search">
-            </div>
-            <div class="lang">
-                <span class="active">En</span> | <span>Ua</span>
-            </div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
         </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a onclick="showPage('home')">HOME</a></li>
+            <li><a onclick="showPage('about')">ABOUT US</a></li>
+            <li><a href="#">SERVICES</a></li>
+            <li><a onclick="showPage('contact')">CONTACT</a></li>
+        </ul>
     </nav>
 
-    <section class="hero">
-        <div class="hero-content" id="parallax-content">
-            <span class="small-heading">Need any help?</span>
+    <section id="home" class="page-section active">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <p class="hero-subtitle">Need Any Help?</p>
             <h1>We fight for <br><span>Right</span></h1>
-            <p class="description">
-                We are a law firm providing various types of legal advice. Carrying out our job, we follow the policy of individual approach.
+            <p class="hero-desc">
+                We are a law firm providing various types of legal advice. Carrying out our job, we follow the policy of individual approach towards each client.
             </p>
-            <div class="cta-group">
-                <a href="#" class="btn btn-primary">Get a free consultation</a>
-                <a href="#" class="btn btn-outline">About us</a>
+            <div class="btn-stack">
+                <a onclick="showPage('contact')" class="btn btn-primary">Get a Free Consultation</a>
+                <a onclick="showPage('about')" class="btn btn-outline">About Us</a>
             </div>
-        </div>
-
-        <div class="pagination">
-            <div class="dot active"></div>
-            <div class="dot"></div>
         </div>
     </section>
 
-    <section class="section-about">
-        <h2>Our Practice Areas</h2>
-        <p>
-            At Junior Law Firm, we specialize in corporate law, criminal defense, and family litigation. We bring clarity to complex legal situations.
-            <br><br>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        </p>
+    <section id="about" class="page-section">
+        <div class="content-container">
+            <h2 class="section-title">Who We Are</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>At <strong>Junior Law Firm</strong>, we represent the new generation of legal excellence. Founded on the principles of integrity, transparency, and relentless advocacy, we bridge the gap between traditional legal wisdom and modern problem-solving strategies.</p>
+                    <p>Our firm specializes in navigating complex legal landscapes for individuals and corporations alike. Whether you are facing criminal charges, navigating a difficult divorce, or structuring a corporate merger, our team creates tailored strategies that prioritize your specific goals.</p>
+                    <p>We don't just interpret the law; we champion your cause with an individual approach that ensures no detail is overlooked.</p>
+                    <br>
+                    <a onclick="showPage('contact')" class="btn btn-primary" style="display:inline-block; width:auto;">Meet Our Attorneys</a>
+                </div>
+                <div class="about-images">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2669&auto=format&fit=crop" alt="Law Office" class="about-img">
+                    <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2632&auto=format&fit=crop" alt="Legal Meeting" class="about-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="page-section">
+        <div class="content-container">
+            <h2 class="section-title">Get In Touch</h2>
+            <p style="color:#aaa; margin-bottom:40px;">Reach out to us for a confidential case evaluation.</p>
+            
+            <div class="contact-wrapper">
+                <div class="contact-details">
+                    <div class="info-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>+1 (555) 123-4567</p>
+                            <p>+1 (555) 987-6543</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>contact@juniorlawfirm.com</p>
+                            <p>consult@juniorlawfirm.com</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Location</h4>
+                            <p>101 Legal Avenue, Suite 400<br>New York, NY 10012</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-info-box">
+                    <h3 style="color:var(--gold); font-family:var(--font-serif); margin-bottom:20px;">Office Hours</h3>
+                    <p style="color:#ccc; line-height:2;">
+                        Monday - Friday: 9:00 AM - 6:00 PM<br>
+                        Saturday: 10:00 AM - 2:00 PM<br>
+                        Sunday: Closed
+                    </p>
+                    <br>
+                    <p style="font-size:0.9rem; color:#888;">*Emergency legal counsel available 24/7 for existing clients.</p>
+                </div>
+            </div>
+        </div>
     </section>
 
     <script>
-        // --- 1. Navbar Scroll Effect ---
-        window.addEventListener("scroll", function() {
-            var nav = document.getElementById("navbar");
-            if (window.scrollY > 50) {
-                nav.classList.add("scrolled");
-            } else {
-                nav.classList.remove("scrolled");
-            }
-        });
-
-        // --- 2. Mobile Menu Toggle ---
-        const navSlide = () => {
-            const burger = document.querySelector('.burger');
-            const nav = document.querySelector('.nav-links');
-            const navLinks = document.querySelectorAll('.nav-links li');
-
-            burger.addEventListener('click', () => {
-                // Toggle Nav
-                nav.classList.toggle('nav-active');
-
-                // Animate Links
-                navLinks.forEach((link, index) => {
-                    if (link.style.animation) {
-                        link.style.animation = '';
-                    } else {
-                        link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
-                    }
-                });
-                
-                // Burger Animation
-                burger.classList.toggle('toggle');
+        // FUNCTION TO SWITCH PAGES
+        function showPage(pageId) {
+            // 1. Hide all pages
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => {
+                page.classList.remove('active');
             });
-        }
-        navSlide();
 
-        // --- 3. Mouse Movement Parallax (Desktop Only) ---
-        document.addEventListener("mousemove", parallax);
-
-        function parallax(e) {
-            if (window.innerWidth > 768) {
-                const content = document.getElementById('parallax-content');
-                const speed = 2; 
-                
-                const x = (window.innerWidth - e.pageX * speed) / 100;
-                const y = (window.innerHeight - e.pageY * speed) / 100;
-
-                content.style.transform = `translateX(${x}px) translateY(${y}px)`;
+            // 2. Show the selected page
+            const activePage = document.getElementById(pageId);
+            if(activePage) {
+                activePage.classList.add('active');
             }
+
+            // 3. Close mobile menu if open
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.remove('active');
+        }
+
+        // TOGGLE MOBILE MENU
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
         }
     </script>
-
-    <style>
-        @keyframes navLinkFade {
-            from { opacity: 0; transform: translateX(-50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-    </style>
 
 </body>
 </html>
