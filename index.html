@@ -112,6 +112,32 @@
             width: 100%;
         }
 
+        /* --- CREDITS (Code by Thursday) --- */
+        .credits {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .credits span {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: var(--font-sans);
+        }
+
+        .credits a {
+            color: var(--gold);
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+
+        .credits a:hover {
+            color: white;
+            transform: scale(1.1);
+        }
+
         /* --- PAGE STRUCTURE (SPA) --- */
         .page-section {
             position: absolute;
@@ -126,6 +152,7 @@
             padding-top: 80px; 
             background-color: var(--bg-dark);
             z-index: 1;
+            padding-bottom: 60px; /* Space for footer on mobile */
         }
 
         .page-section.active {
@@ -137,6 +164,7 @@
         /* --- HOME PAGE --- */
         #home {
             padding-top: 0;
+            padding-bottom: 0;
             overflow: hidden; 
             display: flex;
             align-items: center;
@@ -263,7 +291,7 @@
         .info-item p { color: var(--text-muted); line-height: 1.5; }
         .contact-info-box { background: rgba(255,255,255,0.03); padding: 40px; border: 1px solid rgba(197, 160, 89, 0.2); }
 
-        /* --- COOL MOBILE MENU FIXES --- */
+        /* --- MOBILE SPECIFIC STYLES --- */
         @media (max-width: 768px) {
             
             nav { 
@@ -273,9 +301,23 @@
                 gap: 20px;
             }
             
+            /* Order: Hamburger Left, Logo Right next to it */
             .hamburger { display: block; order: 1; }
             .logo { order: 2; }
             
+            /* Hide credits from top nav on mobile, move to bottom */
+            .credits {
+                position: fixed;
+                bottom: 15px;
+                left: 0;
+                width: 100%;
+                justify-content: center;
+                z-index: 2000;
+                pointer-events: none; /* Allows clicks through empty space */
+            }
+            
+            .credits a { pointer-events: auto; } /* Re-enable click for icon */
+
             /* FLOATING GLASS CARD MENU */
             .nav-links {
                 position: absolute;
@@ -344,6 +386,13 @@
             <li><a href="#">SERVICES</a></li>
             <li><a onclick="showPage('contact')">CONTACT</a></li>
         </ul>
+
+        <div class="credits">
+            <span>Code by Thursday</span>
+            <a href="https://www.linkedin.com/in/albert-juma-62a92130b/" target="_blank">
+                <i class="fab fa-linkedin"></i>
+            </a>
+        </div>
     </nav>
 
     <section id="home" class="page-section active">
